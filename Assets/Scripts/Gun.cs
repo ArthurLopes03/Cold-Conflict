@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -11,7 +12,6 @@ public class Gun : MonoBehaviour
 
     [Header("Stats")]
     public float bulletSpeed;
-    public float damage;
     public float fireDelay;
     public GameObject ammoType;
     public int maxAmmo;
@@ -20,25 +20,40 @@ public class Gun : MonoBehaviour
 
     [Header("Setup")]
     public GameObject instantiatePoint;
-    public GameObject shootDirection;
+    public Animator gunAnimator;
+    public TextMeshProUGUI textMesh;
+    private string ammoString;
 
     private void Start()
     {
         ammoCount = maxAmmo;
+        SetAmmo();
     }
     void Update()
     {
         if (Input.GetKeyDown(shootKey) && ammoCount != 0 && canShoot)
             Shoot();
+
+        if(Input.GetKeyDown(aimKey))
+        {
+            gunAnimator.SetBool("ADS", true);
+        }
+
+        if (Input.GetKeyUp(aimKey))
+        {
+            gunAnimator.SetBool("ADS", false);
+        }
     }
 
     private void Shoot()
     {
         canShoot = false;
         ammoCount--;
-        var instance = Instantiate(ammoType, instantiatePoint.transform.position, instantiatePoint.transform.rotation);
-        instance.GetComponent<Rigidbody>().MovePosition(shootDirection.transform.forward * bulletSpeed);
+        var instance = Instantiate(ammoType, instantiatePoint.transform.position, instantiatePoint.transform.rotation * Quaternion.AngleAxis(90, Vector3.right));
+        instance.GetComponent<Rigidbody>().AddForce(instantiatePoint.transform.forward * bulletSpeed, ForceMode.Impulse);
+        gunAnimator.SetTrigger("Fire");
         Invoke(nameof(ResetShoot), fireDelay);
+        SetAmmo();
     }
 
     private void Reload()
@@ -46,8 +61,14 @@ public class Gun : MonoBehaviour
         ammoCount = maxAmmo;
     }
 
-    private void ResetShoot()
+    public void ResetShoot()
     {
         canShoot = true;
+    }
+
+    private void SetAmmo()
+    {
+        ammoString = ammoCount.ToString() + " / " + maxAmmo.ToString();
+        textMesh.SetText(ammoString);
     }
 }
