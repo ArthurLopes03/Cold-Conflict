@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Gun : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class Gun : MonoBehaviour
     public Animator gunAnimator;
     public TextMeshProUGUI textMesh;
     private string ammoString;
+    public VisualEffect muzzleFlash;
 
     private void Start()
     {
@@ -52,6 +54,7 @@ public class Gun : MonoBehaviour
         var instance = Instantiate(ammoType, instantiatePoint.transform.position, instantiatePoint.transform.rotation * Quaternion.AngleAxis(90, Vector3.right));
         instance.GetComponent<Rigidbody>().AddForce(instantiatePoint.transform.forward * bulletSpeed, ForceMode.Impulse);
         gunAnimator.SetTrigger("Fire");
+        muzzleFlash.Play();
         Invoke(nameof(ResetShoot), fireDelay);
         SetAmmo();
     }
