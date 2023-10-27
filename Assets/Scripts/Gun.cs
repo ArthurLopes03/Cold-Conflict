@@ -17,7 +17,7 @@ public class Gun : MonoBehaviour
     public GameObject ammoType;
     public int maxAmmo;
     private int ammoCount;
-    private bool canShoot = true;
+    public bool canShoot = true;
 
     [Header("Setup")]
     public GameObject instantiatePoint;
@@ -25,6 +25,9 @@ public class Gun : MonoBehaviour
     public TextMeshProUGUI textMesh;
     private string ammoString;
     public VisualEffect muzzleFlash;
+
+    [Header("AudioSource")]
+    public AudioSource fireSound;
 
     private void Start()
     {
@@ -54,8 +57,9 @@ public class Gun : MonoBehaviour
         var instance = Instantiate(ammoType, instantiatePoint.transform.position, instantiatePoint.transform.rotation * Quaternion.AngleAxis(90, Vector3.right));
         instance.GetComponent<Rigidbody>().AddForce(instantiatePoint.transform.forward * bulletSpeed, ForceMode.Impulse);
         gunAnimator.SetTrigger("Fire");
+        fireSound.Play();
         muzzleFlash.Play();
-        Invoke(nameof(ResetShoot), fireDelay);
+        //Invoke(nameof(ResetShoot), fireDelay);
         SetAmmo();
     }
 
@@ -66,6 +70,7 @@ public class Gun : MonoBehaviour
 
     public void ResetShoot()
     {
+        Debug.Log("Shot Reset");
         canShoot = true;
     }
 
