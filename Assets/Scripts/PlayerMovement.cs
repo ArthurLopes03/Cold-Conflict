@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float groundDrag;
 
+    public Animator camAnimator;
+
     [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
@@ -84,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
+        SetAnimations();
 
         // handle drag
         if (grounded)
@@ -291,4 +294,34 @@ public class PlayerMovement : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
+
+    public void SetAnimations()
+    {
+        if (grounded && horizontalInput == 0 && verticalInput == 0)
+        {
+            camAnimator.SetBool("Walking", false);
+            camAnimator.SetBool("Running", false);
+        }
+        else if (state == MovementState.walking)
+        {
+            camAnimator.SetBool("Walking", true);
+            camAnimator.SetBool("Running", false);
+        }
+        else if (state == MovementState.sprinting)
+        {
+            camAnimator.SetBool("Walking", false);
+            camAnimator.SetBool("Running", true);
+        }
+        else if (state == MovementState.sliding)
+        {
+            camAnimator.SetBool("Walking", false);
+            camAnimator.SetBool("Running", false);
+        }
+        else if (state == MovementState.air)
+        {
+            camAnimator.SetBool("Walking", false);
+            camAnimator.SetBool("Running", false);
+        }
+    }
+
 }
