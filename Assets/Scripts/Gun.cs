@@ -9,15 +9,15 @@ public class Gun : MonoBehaviour
     [Header("Controls")]
     public KeyCode shootKey = KeyCode.Mouse0;
     public KeyCode aimKey = KeyCode.Mouse1;
-    public KeyCode reload = KeyCode.R;
+    public KeyCode reloadKey = KeyCode.R;
 
     [Header("Stats")]
     public float bulletSpeed;
-    public float fireDelay;
     public GameObject ammoType;
     public int maxAmmo;
     private int ammoCount;
     public bool canShoot = true;
+    public bool isAutomatic;
 
     [Header("Setup")]
     public GameObject instantiatePoint;
@@ -25,6 +25,8 @@ public class Gun : MonoBehaviour
     public TextMeshProUGUI textMesh;
     private string ammoString;
     public VisualEffect muzzleFlash;
+    private bool isReloading = false;
+    public PlayerMovement playerMovement;
 
     [Header("AudioSource")]
     public AudioSource fireSound;
@@ -36,17 +38,36 @@ public class Gun : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(shootKey) && ammoCount != 0 && canShoot)
+        if (playerMovement.state == PlayerMovement.MovementState.sprinting)
+        {
+            gunAnimator.SetBool("Running", true);
+        }
+
+        else
+        {
+            gunAnimator.SetBool("Running", false);
+        }
+
+        if (Input.GetKeyDown(shootKey) && ammoCount != 0 && canShoot && !isAutomatic && playerMovement.state != PlayerMovement.MovementState.sprinting)
             Shoot();
 
-        if(Input.GetKeyDown(aimKey))
+        if (Input.GetKey(shootKey) && ammoCount != 0 && canShoot && isAutomatic && playerMovement.state != PlayerMovement.MovementState.sprinting)
+            Shoot();
+
+        if (Input.GetKeyDown(aimKey) && playerMovement.state != PlayerMovement.MovementState.sprinting)
         {
             gunAnimator.SetBool("ADS", true);
         }
 
-        if (Input.GetKeyUp(aimKey))
+        if (Input.GetKeyUp(aimKey) && playerMovement.state != PlayerMovement.MovementState.sprinting)
         {
             gunAnimator.SetBool("ADS", false);
+        }
+
+        if(Input.GetKeyDown(reloadKey) && ammoCount != maxAmmo && !isReloading && playerMovement.state != PlayerMovement.MovementState.sprinting)
+        {
+            gunAnimator.SetTrigger("Reload");
+            isReloading = true;
         }
     }
 
@@ -66,6 +87,7 @@ public class Gun : MonoBehaviour
     private void Reload()
     {
         ammoCount = maxAmmo;
+        SetAmmo();
     }
 
     public void ResetShoot()
@@ -78,5 +100,6 @@ public class Gun : MonoBehaviour
     {
         ammoString = ammoCount.ToString() + " / " + maxAmmo.ToString();
         textMesh.SetText(ammoString);
+        isReloading = false;
     }
 }
