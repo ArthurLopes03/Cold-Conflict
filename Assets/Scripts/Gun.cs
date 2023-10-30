@@ -18,6 +18,7 @@ public class Gun : MonoBehaviour
     private int ammoCount;
     public bool canShoot = true;
     public bool isAutomatic;
+    public float maxSpread = 5;
 
     [Header("Setup")]
     public GameObject instantiatePoint;
@@ -57,11 +58,13 @@ public class Gun : MonoBehaviour
         if (Input.GetKeyDown(aimKey) && playerMovement.state != PlayerMovement.MovementState.sprinting)
         {
             gunAnimator.SetBool("ADS", true);
+            maxSpread = maxSpread / 2;
         }
 
         if (Input.GetKeyUp(aimKey) && playerMovement.state != PlayerMovement.MovementState.sprinting)
         {
             gunAnimator.SetBool("ADS", false);
+            maxSpread = maxSpread * 2;
         }
 
         if(Input.GetKeyDown(reloadKey) && ammoCount != maxAmmo && !isReloading && playerMovement.state != PlayerMovement.MovementState.sprinting)
@@ -75,8 +78,9 @@ public class Gun : MonoBehaviour
     {
         canShoot = false;
         ammoCount--;
+        Vector3 dir = instantiatePoint.transform.forward + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread));
         var instance = Instantiate(ammoType, instantiatePoint.transform.position, instantiatePoint.transform.rotation * Quaternion.AngleAxis(90, Vector3.right));
-        instance.GetComponent<Rigidbody>().AddForce(instantiatePoint.transform.forward * bulletSpeed, ForceMode.Impulse);
+        instance.GetComponent<Rigidbody>().AddForce(dir * bulletSpeed, ForceMode.Impulse);
         gunAnimator.SetTrigger("Fire");
         fireSound.Play();
         muzzleFlash.Play();
@@ -92,7 +96,6 @@ public class Gun : MonoBehaviour
 
     public void ResetShoot()
     {
-        Debug.Log("Shot Reset");
         canShoot = true;
     }
 
