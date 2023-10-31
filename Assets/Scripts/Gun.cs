@@ -31,6 +31,8 @@ public class Gun : MonoBehaviour
 
     [Header("AudioSource")]
     public AudioSource fireSound;
+    public AudioSource emptySound;
+    public AudioSource[] reloadSounds;
 
     private void Start()
     {
@@ -48,6 +50,9 @@ public class Gun : MonoBehaviour
         {
             gunAnimator.SetBool("Running", false);
         }
+
+        if (Input.GetKeyDown(shootKey) && ammoCount <= 0 && playerMovement.state != PlayerMovement.MovementState.sprinting)
+            PlayClick();
 
         if (Input.GetKeyDown(shootKey) && ammoCount != 0 && canShoot && !isAutomatic && playerMovement.state != PlayerMovement.MovementState.sprinting)
             Shoot();
@@ -82,7 +87,7 @@ public class Gun : MonoBehaviour
         var instance = Instantiate(ammoType, instantiatePoint.transform.position, instantiatePoint.transform.rotation * Quaternion.AngleAxis(90, Vector3.right));
         instance.GetComponent<Rigidbody>().AddForce(dir * bulletSpeed, ForceMode.Impulse);
         gunAnimator.SetTrigger("Fire");
-        fireSound.Play();
+        PlayFire();
         muzzleFlash.Play();
         //Invoke(nameof(ResetShoot), fireDelay);
         SetAmmo();
@@ -104,5 +109,20 @@ public class Gun : MonoBehaviour
         ammoString = ammoCount.ToString() + " / " + maxAmmo.ToString();
         textMesh.SetText(ammoString);
         isReloading = false;
+    }
+
+    private void PlayFire()
+    {
+        fireSound.Play();
+    }
+
+    private void PlayClick()
+    {
+        emptySound.Play();
+    }
+
+    private void PlayReloadSound(int i)
+    {
+        reloadSounds[i].Play();
     }
 }
