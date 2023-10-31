@@ -4101,6 +4101,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 525484124939215163, guid: fe4a992a70ed97642b68e840d9ca77dd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1357665684194064324, guid: fe4a992a70ed97642b68e840d9ca77dd, type: 3}
       propertyPath: textMesh
       value: 
