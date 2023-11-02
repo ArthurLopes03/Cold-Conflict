@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ammo : MonoBehaviour
 {
     private float existanceTime = 10f;
-    public float damage;
+    public int damage;
 
     private void Start()
     {
@@ -15,13 +15,18 @@ public class Ammo : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         if(collision.gameObject.tag == "HitBox")
         {
             collision.gameObject.GetComponentInParent<EnemyManager>().health -= collision.gameObject.GetComponent<HitBox>().hitModifier * damage;
             Debug.Log("Hit for " + collision.gameObject.GetComponent<HitBox>().hitModifier * damage);
         }
 
-        Debug.Log("Collide");
+        if(collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerManager>().TakeDamage(damage);
+        }
+
         RemoveBullet();
     }
 
