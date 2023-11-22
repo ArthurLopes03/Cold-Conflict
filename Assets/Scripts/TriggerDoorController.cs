@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class TriggerDoorController : MonoBehaviour
@@ -10,16 +11,17 @@ public class TriggerDoorController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        print(other.gameObject.name);
         if (other.CompareTag("Player"))
         {
             if (openTrigger)
             {
-                myDoor.Play("DoorOpen", 0, 0.0f);
+                myDoor.SetTrigger("OpenDoor");
                 gameObject.SetActive(false);
             }
             else if (closeTrigger)
             {
-                myDoor.Play("DoorClose", 0, 0.0f);
+                myDoor.SetTrigger("CloseDoor");
                 gameObject.SetActive(false);
             }
         }
