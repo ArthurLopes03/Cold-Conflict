@@ -1223,7 +1223,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 3
     messageOptions: 0
-  - time: 3
+  - time: 2.9666667
     functionName: Reload
     data: 
     objectReferenceParameter: {fileID: 0}

@@ -6,6 +6,7 @@ using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Setup")]
     public GameObject[] weapons;
     public int playerHealth;
     public int currentEquipIndex;
@@ -14,6 +15,10 @@ public class PlayerManager : MonoBehaviour
 
     public KeyCode mainWeapon = KeyCode.Alpha1;
     public KeyCode sideWeapon = KeyCode.Alpha2;
+
+    [Header("Weapon UI")]
+    public Image weaponPanel;
+    public Sprite[] weaponSlots;
 
     private void Start()
     {
@@ -38,6 +43,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SwitchWeapons(int index)
     {
+        weaponPanel.sprite = weaponSlots[index];
         weapons[currentEquipIndex].SetActive(false);
         weapons[index].SetActive(true);
         weapons[index].GetComponent<Animator>().SetTrigger("Draw");
