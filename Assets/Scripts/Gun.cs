@@ -26,7 +26,8 @@ public class Gun : MonoBehaviour
     public TextMeshProUGUI textMesh;
     private string ammoString;
     public VisualEffect muzzleFlash;
-    private bool isReloading = false;
+    public bool isReloading = false;
+    public bool isAiming = false;
     public PlayerMovement playerMovement;
 
     [Header("AudioSource")]
@@ -41,7 +42,8 @@ public class Gun : MonoBehaviour
     }
     void Update()
     {
-        if (playerMovement.state == PlayerMovement.MovementState.sprinting)
+        //If the player is sprinting, the run animation plays
+        if (playerMovement.state == PlayerMovement.MovementState.sprinting && (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0))
         {
             gunAnimator.SetBool("Running", true);
         }
@@ -51,31 +53,38 @@ public class Gun : MonoBehaviour
             gunAnimator.SetBool("Running", false);
         }
 
+        //If the gun has no ammo, it plays a click instead
         if (Input.GetKeyDown(shootKey) && ammoCount <= 0 && playerMovement.state != PlayerMovement.MovementState.sprinting)
             PlayClick();
 
+        //If the gun is not automatic, it will only fire once per click
         if (Input.GetKeyDown(shootKey) && ammoCount != 0 && canShoot && !isAutomatic && playerMovement.state != PlayerMovement.MovementState.sprinting)
             Shoot();
 
+        //If the gun is automatic, as long as the player holds down the fire button, it will shoot
         if (Input.GetKey(shootKey) && ammoCount != 0 && canShoot && isAutomatic && playerMovement.state != PlayerMovement.MovementState.sprinting)
             Shoot();
 
-        if (Input.GetKeyDown(aimKey) && playerMovement.state != PlayerMovement.MovementState.sprinting)
+        //When the player holds down the aim key, it will switch the animation mode to the ADS mode
+        if (Input.GetKeyDown(aimKey))
         {
+            isAiming = true;
             gunAnimator.SetBool("ADS", true);
             maxSpread = maxSpread / 2;
         }
 
+        //When the player stops pushing the aim key, it will switch back to the normal mode
         if (Input.GetKeyUp(aimKey) && playerMovement.state != PlayerMovement.MovementState.sprinting)
         {
+            isAiming = false;
             gunAnimator.SetBool("ADS", false);
             maxSpread = maxSpread * 2;
         }
 
-        if(Input.GetKeyDown(reloadKey) && ammoCount != maxAmmo && !isReloading && playerMovement.state != PlayerMovement.MovementState.sprinting)
+        if(Input.GetKeyDown(reloadKey) && ammoCount != maxAmmo && !isReloading)
         {
-            gunAnimator.SetTrigger("Reload");
             isReloading = true;
+            gunAnimator.SetTrigger("Reload");
         }
     }
 

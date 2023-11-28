@@ -2014,6 +2014,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   maxSlopeAngle: 40
+  playerManager: {fileID: 8635151071909853844}
   orientation: {fileID: 2234591314102931185}
   state: 0
   sliding: 0
@@ -2050,7 +2051,9 @@ MonoBehaviour:
   - {fileID: 6976183924743358125}
   - {fileID: 6830251049989359790}
   playerHealth: 0
-  currentEquip: 0
+  currentEquipIndex: 0
+  currentEpuipGun: {fileID: 2077102137098207729}
+  textMesh: {fileID: 0}
   mainWeapon: 49
   sideWeapon: 50
 --- !u!1 &6820194963467379954
@@ -2152,6 +2155,7 @@ MonoBehaviour:
   gunAnimator: {fileID: 4653477110960498288}
   textMesh: {fileID: 0}
   muzzleFlash: {fileID: 3493889900269577382}
+  isReloading: 0
   playerMovement: {fileID: 6564730712651807482}
   fireSound: {fileID: 1503549284026358290}
   emptySound: {fileID: 3145252394592361351}
@@ -2284,6 +2288,7 @@ MonoBehaviour:
   gunAnimator: {fileID: 8330887330262498776}
   textMesh: {fileID: 0}
   muzzleFlash: {fileID: 5732691645931872986}
+  isReloading: 0
   playerMovement: {fileID: 6564730712651807482}
   fireSound: {fileID: 1550557739873589300}
   emptySound: {fileID: 5271528523525121585}

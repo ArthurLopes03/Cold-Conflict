@@ -8,7 +8,8 @@ public class PlayerManager : MonoBehaviour
 {
     public GameObject[] weapons;
     public int playerHealth;
-    public int currentEquip;
+    public int currentEquipIndex;
+    public Gun currentEpuipGun;
     public TextMeshProUGUI textMesh;
 
     public KeyCode mainWeapon = KeyCode.Alpha1;
@@ -16,19 +17,19 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        currentEquip = 0;
+        currentEquipIndex = 0;
         weapons[1].SetActive(false);
         textMesh.text = playerHealth.ToString();
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1) && currentEquip != 0)
+        if(Input.GetKeyDown(KeyCode.Alpha1) && currentEquipIndex != 0)
         {
             Debug.Log("Changing to Main Weapon");
             SwitchWeapons(0);
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2) && currentEquip != 1)
+        else if(Input.GetKeyDown(KeyCode.Alpha2) && currentEquipIndex != 1)
         {
             Debug.Log("Changing to Side Weapon");
             SwitchWeapons(1);
@@ -37,10 +38,11 @@ public class PlayerManager : MonoBehaviour
 
     public void SwitchWeapons(int index)
     {
-        weapons[currentEquip].SetActive(false);
+        weapons[currentEquipIndex].SetActive(false);
         weapons[index].SetActive(true);
         weapons[index].GetComponent<Animator>().SetTrigger("Draw");
-        currentEquip = index;
+        currentEquipIndex = index;
+        currentEpuipGun = weapons[currentEquipIndex].GetComponent<Gun>();
     }
 
     public void TakeDamage(int damage)

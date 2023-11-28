@@ -5,12 +5,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    private float moveSpeed;
+    public float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
     public float slideSpeed;
 
-    private float desiredMoveSpeed;
+    public float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
 
     public float speedIncreaseMultiplier;
@@ -45,7 +45,9 @@ public class PlayerMovement : MonoBehaviour
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
     private bool exitingSlope;
-    
+
+    [Header("Addings")]
+    public PlayerManager playerManager;
 
     public Transform orientation;
 
@@ -66,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         air
     }
 
-    public bool sliding;
+    public bool isSliding;
 
     private void Start()
     {
@@ -102,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MyInput()
     {
-        if (!sliding)
+        if (!isSliding)
         {
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
@@ -119,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // start crouch
-        if (Input.GetKeyDown(crouchKey))
+        if (Input.GetKeyDown(crouchKey) && state != MovementState.sprinting)
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -135,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
     private void StateHandler()
     {
         // Mode - Sliding
-        if (sliding)
+        if (isSliding)
         {
             state = MovementState.sliding;
 
@@ -147,17 +149,23 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Mode - Crouching
-        else if (Input.GetKey(crouchKey))
+        else if (Input.GetKey(crouchKey) && state != MovementState.sprinting)
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
         }
 
         // Mode - Sprinting
-        else if(grounded && Input.GetKey(sprintKey))
+        else if(grounded && Input.GetKey(sprintKey) && !playerManager.currentEpuipGun.isReloading && !playerManager.currentEpuipGun.isAiming)
         {
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
+
+            if(playerManager.currentEpuipGun.isAiming)
+            {
+                state = MovementState.walking;
+                desiredMoveSpeed = walkSpeed;
+            }
         }
 
         // Mode - Walking

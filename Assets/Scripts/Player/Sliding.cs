@@ -9,6 +9,8 @@ public class Sliding : MonoBehaviour
     public Transform playerObj;
     private Rigidbody rb;
     private PlayerMovement pm;
+    public PlayerCam playerCam;
+
 
     [Header("Sliding")]
     public float maxSlideTime;
@@ -21,6 +23,7 @@ public class Sliding : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
+    Vector3 inputDirection;
 
     private void Start()
     {
@@ -35,32 +38,39 @@ public class Sliding : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(pm.sprintKey) && Input.GetKeyDown(pm.crouchKey) && (horizontalInput != 0 || verticalInput != 0))
+        if (Input.GetKey(pm.sprintKey) && Input.GetKeyDown(pm.crouchKey) && (horizontalInput != 0 || verticalInput != 0) && pm.moveSpeed == pm.sprintSpeed)
+        {
             StartSlide();
+        }
 
-        if ((Input.GetKeyUp(pm.sprintKey) || Input.GetKeyUp(pm.crouchKey)) && pm.sliding)
+        if ((Input.GetKeyUp(pm.sprintKey) || Input.GetKeyUp(pm.crouchKey)) && pm.isSliding)
             StopSlide();
     }
 
     private void FixedUpdate()
     {
-        if (pm.sliding)
-            SlidingMovement();
+        if (pm.isSliding)
+            SlidingMovement(inputDirection);
     }
 
     private void StartSlide()
     {
-        pm.sliding = true;
+        Debug.Log("StartSlide Called");
+        pm.isSliding = true;
 
-        //playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
-        //rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        playerCam.sensX = playerCam.sensX / 3;
+        playerCam.sensY = playerCam.sensY / 3;
+
+        inputDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
+        rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
 
         slideTimer = maxSlideTime;
     }
 
-    private void SlidingMovement()
+    private void SlidingMovement(Vector3 inputDirection)
     {
-        Vector3 inputDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // sliding normal
         if(!pm.OnSlope() || rb.velocity.y > -0.1f)
@@ -82,7 +92,10 @@ public class Sliding : MonoBehaviour
 
     private void StopSlide()
     {
-        pm.sliding = false;
+        pm.isSliding = false;
+
+        playerCam.sensX = playerCam.sensX * 3;
+        playerCam.sensY = playerCam.sensY * 3;
 
         playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
     }
