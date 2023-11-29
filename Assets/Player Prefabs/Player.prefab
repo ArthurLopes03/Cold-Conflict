@@ -1994,9 +1994,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29f8fcb392460b4ca11cb8d0b314e17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0
   walkSpeed: 7
   sprintSpeed: 10
   slideSpeed: 30
+  desiredMoveSpeed: 0
   speedIncreaseMultiplier: 5
   slopeIncreaseMultiplier: 5
   groundDrag: 4
@@ -2017,7 +2019,7 @@ MonoBehaviour:
   playerManager: {fileID: 8635151071909853844}
   orientation: {fileID: 2234591314102931185}
   state: 0
-  sliding: 0
+  isSliding: 0
 --- !u!114 &7058541110708069371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2032,6 +2034,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 2234591314102931185}
   playerObj: {fileID: 1663008788656582532}
+  playerCam: {fileID: 0}
   maxSlideTime: 1
   slideForce: 13
   slideYScale: 0.5
@@ -2056,6 +2059,8 @@ MonoBehaviour:
   textMesh: {fileID: 0}
   mainWeapon: 49
   sideWeapon: 50
+  weaponIcon: {fileID: 0}
+  weaponSlots: []
 --- !u!1 &6820194963467379954
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,6 +2161,7 @@ MonoBehaviour:
   textMesh: {fileID: 0}
   muzzleFlash: {fileID: 3493889900269577382}
   isReloading: 0
+  isAiming: 0
   playerMovement: {fileID: 6564730712651807482}
   fireSound: {fileID: 1503549284026358290}
   emptySound: {fileID: 3145252394592361351}
@@ -2289,6 +2295,7 @@ MonoBehaviour:
   textMesh: {fileID: 0}
   muzzleFlash: {fileID: 5732691645931872986}
   isReloading: 0
+  isAiming: 0
   playerMovement: {fileID: 6564730712651807482}
   fireSound: {fileID: 1550557739873589300}
   emptySound: {fileID: 5271528523525121585}

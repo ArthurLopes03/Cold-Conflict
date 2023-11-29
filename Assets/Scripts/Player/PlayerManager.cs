@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -41,6 +42,11 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Changing to Side Weapon");
             SwitchWeapons(1);
         }
+
+        if(playerHealth <= 0) 
+        {
+            EndScreen();
+        }
     }
 
     private void FixedUpdate()
@@ -78,5 +84,10 @@ public class PlayerManager : MonoBehaviour
     {
         weaponIcon.color = new Color(1, 1, 1, alphaLevel);
         alphaLevel -= 0.05f;
+    }
+
+    public void EndScreen()
+    {
+        SceneManager.LoadScene("Death Screen");
     }
 }
