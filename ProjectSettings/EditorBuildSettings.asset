@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/main menu.unity
+    guid: ca31a1d1b681fae4c8ce0dc2ca0a7dea
+  - enabled: 1
     path: Assets/Scenes/cold conflict.unity
     guid: 0a131c71eedb16c48b6144d32444b86e
   m_configObjects: {}
