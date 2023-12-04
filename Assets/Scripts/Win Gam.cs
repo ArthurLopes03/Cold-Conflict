@@ -8,6 +8,7 @@ public class WinGam : MonoBehaviour
 {
     void OnTriggerEnter(Collider ChangeScene)
     {
+        Debug.Log("raaahhhahah");
         if (ChangeScene.gameObject.CompareTag("Player"))
         {
             SceneManager.LoadScene("main menu");
